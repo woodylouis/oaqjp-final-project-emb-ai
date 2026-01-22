@@ -17,28 +17,53 @@ def emotion_detector(text_to_analyse):
         "grpc-metadata-mm-model-id": "emotion_aggregated-workflow_lang_en_stock"}
     input_json = {"raw_document": {"text": text_to_analyse}}
 
-    response = requests.post(url, headers=headers, json=input_json)
+    try:
+        # 添加超时设置（30秒）
+        response = requests.post(url, headers=headers,
+                                 json=input_json, timeout=30)
 
-    # 将响应文本转换为字典
-    formatted_response = json.loads(response.text)
+        # 检查响应状态码
+        if response.status_code == 200:
+            # 将响应文本转换为字典
+            formatted_response = json.loads(response.text)
 
-    # 提取情绪分数
-    emotions = formatted_response['emotionPredictions'][0]['emotion']
-    anger_score = emotions['anger']
-    disgust_score = emotions['disgust']
-    fear_score = emotions['fear']
-    joy_score = emotions['joy']
-    sadness_score = emotions['sadness']
+            # 提取情绪分数
+            emotions = formatted_response['emotionPredictions'][0]['emotion']
+            anger_score = emotions['anger']
+            disgust_score = emotions['disgust']
+            fear_score = emotions['fear']
+            joy_score = emotions['joy']
+            sadness_score = emotions['sadness']
 
-    # 找到得分最高的情绪作为主导情绪
-    dominant_emotion = max(emotions, key=emotions.get)
+            # 找到得分最高的情绪作为主导情绪
+            dominant_emotion = max(emotions, key=emotions.get)
 
-    # 构建并返回所需的格式
-    return {
-        'anger': anger_score,
-        'disgust': disgust_score,
-        'fear': fear_score,
-        'joy': joy_score,
-        'sadness': sadness_score,
-        'dominant_emotion': dominant_emotion
-    }
+            # 构建并返回所需的格式
+            return {
+                'anger': anger_score,
+                'disgust': disgust_score,
+                'fear': fear_score,
+                'joy': joy_score,
+                'sadness': sadness_score,
+                'dominant_emotion': dominant_emotion
+            }
+        else:
+            # 如果状态码不是200，返回None值
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+            }
+    except (requests.exceptions.RequestException, KeyError, json.JSONDecodeError) as e:
+        # 捕获所有请求相关的异常
+        return {
+            'anger': None,
+            'disgust': None,
+            'fear': None,
+            'joy': None,
+            'sadness': None,
+            'dominant_emotion': None
+        }
