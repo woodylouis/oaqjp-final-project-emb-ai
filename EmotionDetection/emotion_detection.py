@@ -1,5 +1,10 @@
-import requests
+"""
+Emotion Detection module using Watson NLP API.
+This module provides a function to analyze emotions in a given text.
+"""
+
 import json
+import requests
 
 
 def emotion_detector(text_to_analyse):
@@ -18,16 +23,12 @@ def emotion_detector(text_to_analyse):
     input_json = {"raw_document": {"text": text_to_analyse}}
 
     try:
-        # 添加超时设置（30秒）
         response = requests.post(url, headers=headers,
                                  json=input_json, timeout=30)
 
-        # 检查响应状态码
         if response.status_code == 200:
-            # 将响应文本转换为字典
             formatted_response = json.loads(response.text)
 
-            # 提取情绪分数
             emotions = formatted_response['emotionPredictions'][0]['emotion']
             anger_score = emotions['anger']
             disgust_score = emotions['disgust']
@@ -35,10 +36,8 @@ def emotion_detector(text_to_analyse):
             joy_score = emotions['joy']
             sadness_score = emotions['sadness']
 
-            # 找到得分最高的情绪作为主导情绪
             dominant_emotion = max(emotions, key=emotions.get)
 
-            # 构建并返回所需的格式
             return {
                 'anger': anger_score,
                 'disgust': disgust_score,
@@ -47,8 +46,16 @@ def emotion_detector(text_to_analyse):
                 'sadness': sadness_score,
                 'dominant_emotion': dominant_emotion
             }
+        elif response.status_code == 400:
+            return {
+                'anger': None,
+                'disgust': None,
+                'fear': None,
+                'joy': None,
+                'sadness': None,
+                'dominant_emotion': None
+            }
         else:
-            # 如果状态码不是200，返回None值
             return {
                 'anger': None,
                 'disgust': None,

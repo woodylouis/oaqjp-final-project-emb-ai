@@ -8,6 +8,14 @@
         .center-heading {
             text-align: center;
         }
+
+        #system_response {
+            background-color: #fff3f3;
+            border-left: 5px solid #dc3545;
+            border-radius: 4px;
+            font-family: monospace;
+            color: #721c24;
+        }
     </style>
 </head>
 
@@ -18,20 +26,18 @@
             <div style="padding: 25px 25px 25px 25px;">
                 <h2 class="mb-3">
                     <label class="form-label">Please enter the text to be analyzed</label>
-                    <input type="textarea" class="form-control" id="textToAnalyze" value="I think I am having fun">
+                    <input type="textarea" class="form-control" id="textToAnalyze" value="">
                 </h2>
 
-                <div style="padding: 25px 25px 25px 25px;">
+                <div style="padding: 10px 25px 10px 25px;">
                     <button onclick="RunSentimentAnalysis()" class="btn btn-secondary">Run Sentiment Analysis</button>
                 </div>
-                <div style="padding: 25px 25px 25px 25px;"></div>
+                <div style="padding: 10px 25px 10px 25px;"></div>
                 <h2 class="mb-3">
                     <label class="form-label">Result of Emotion Detection</label>
                 </h2>
 
-                <div id="system_response" style="padding: 25px 25px 25px 25px;">For the given statement, the system
-                    response is 'anger': 0.005217949, 'disgust': 0.0012197484, 'fear': 0.013722802, 'joy': 0.9723117 and
-                    'sadness': 0.026666053. The dominant emotion is joy.</div>
+                <div id="system_response" style="padding: 20px; margin: 25px;">Invalid text! Please try again!.</div>
             </div>
         </div>
 </body>
